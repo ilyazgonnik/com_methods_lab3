@@ -16,6 +16,20 @@
 - `Vt`: правые сингулярные векторы (float16, shape: k × w)
 - `shape`: исходные размеры изображения
 
+## Различия между SVD алгоритмами
+
+### numpy.linalg.svd vs scipy.linalg.svd
+
+#### Различия в реализации:
+- **numpy.linalg.svd** использует LAPACK routine `gesdd` (divide-and-conquer algorithm)
+- **scipy.linalg.svd** по умолчанию использует `gesdd`, но поддерживает выбор драйвера (`gesvd`, `gesdd`)
+
+#### Метрика различий:
+Для оценки различий используется метрика:
+- Вектор `c`, где `c_j = max(a_j/b_j, b_j/a_j)` для упорядоченных сингулярных значений
+- L2-норма вектора `c` показывает степень различия между алгоритмами
+- на картинке special_image ошибка достигла бесконечности
+
 ## Использование
 
 ```python
@@ -24,3 +38,4 @@ compress_image('input.bmp', ratios=[2, 4, 8])
 
 # Восстановление изображения
 decompress_image('compressed_2x.npz', 'restored_2x.bmp')
+```
