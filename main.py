@@ -14,7 +14,7 @@ def compress_image(input_path, ratios=[2, 4, 8]):
         Uk = U[:,:k].astype(np.float16)
         sk = s[:k].astype(np.float16)
         Vtk = Vt[:k,:].astype(np.float16)
-        np.savez_compressed(f'compressed_{ratio}x.npz', U=Uk, s=sk, Vt=Vtk, shape=matrix.shape)
+        np.savez_compressed(f'compressed_{ratio}x_{image_path}.npz', U=Uk, s=sk, Vt=Vtk, shape=matrix.shape)
 
 def decompress_image(compressed_path, output_path):
     data = np.load(compressed_path)
@@ -25,7 +25,9 @@ def decompress_image(compressed_path, output_path):
     Image.fromarray(rec, 'L').save(output_path)
 
 if __name__ == "__main__":
-    compress_image('input.bmp')
-    decompress_image('compressed_2x.npz', 'restored_2x.bmp')
-    decompress_image('compressed_4x.npz', 'restored_4x.bmp')
-    decompress_image('compressed_8x.npz', 'restored_8x.bmp')
+    images = ['leo', 'ninja', 'steve']
+    for image_path in images:
+        compress_image(f'{image_path}.bmp')
+        decompress_image(f'compressed_2x_{image_path}.npz', f'restored_2x_{image_path}.bmp')
+        decompress_image(f'compressed_4x_{image_path}.npz', f'restored_4x_{image_path}.bmp')
+        decompress_image(f'compressed_8x_{image_path}.npz', f'restored_8x_{image_path}.bmp')
